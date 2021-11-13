@@ -18,9 +18,11 @@ Route::post('/login', AuthController::class.'@login');
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', AuthController::class.'@logout');
     Route::post('/translate', TranslateController::class.'@translateMessage');
+    Route::apiResources(['contact-us' => ContactUsController::class],['only' => ['index','store','delete','show']]);
 
     Route::get('/user', function () {
 
         return 'hello';
     });
+
 });

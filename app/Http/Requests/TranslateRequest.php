@@ -26,8 +26,8 @@ class TranslateRequest extends FormRequest
     public function rules()
     {
         return [
-            'target' => 'required',
-            'message' => 'required',
+            'target' => 'required|max:50',
+            'message' => 'required|max:5000',
         ];
     }
     public function failedValidation(Validator $validator)
