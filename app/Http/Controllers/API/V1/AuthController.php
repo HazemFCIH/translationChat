@@ -19,7 +19,6 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'mobile_number' => $request->mobile_number,
-            'password' => bcrypt($request->password),
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
@@ -33,17 +32,12 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         auth()->user()->tokens()->delete();
-        return [
+        return response()->json([
             'message' => 'logged out'
-        ];
+        ],200);
     }
     public function login(LoginRequest $request){
         $user = User::where('email',$request->email)->orWhere('mobile_number',$request->mobile_number)->first();
-        if(!$user || !Hash::check($request->password,$user->password)){
-            return response([
-                'message' => 'bad credentials'
-            ],401);
-        }
         $token = $user->createToken('auth_token')->plainTextToken;
 
         $response = [
