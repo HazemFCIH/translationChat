@@ -15,8 +15,8 @@ class ChatController extends Controller
      */
     public function index(Request $request)
     {
-        $chats = Chat::where('user1',$request->user_id)
-        ->orWhere('user2',$request->user_id)
+        $chats = Chat::where('user1',auth()->user()->id)
+        ->orWhere('user2',auth()->user()->id)
         ->with('user1')
         ->with('user2')
         ->get();
