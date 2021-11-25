@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('mobile_number')->unique();
             $table->string('image_path')->nullable();
             $table->boolean('is_banned')->default(false);
+            $table->boolean('is_active')->default(false);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
             $table->rememberToken();

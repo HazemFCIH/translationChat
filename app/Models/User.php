@@ -23,6 +23,8 @@ class User extends Authenticatable
         'image_path',
         'mobile_number',
         'password',
+        'is_banned',
+        'is_active',
     ];
 
     /**

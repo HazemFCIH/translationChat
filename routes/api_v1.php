@@ -16,13 +16,16 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', AuthController::class.'@register');
 Route::post('/login', AuthController::class.'@login');
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::post('/logout', AuthController::class.'@logout');
-    Route::post('/translate', TranslateController::class.'@translateMessage');
-    Route::apiResources(['contact-us' => ContactUsController::class],['only' => ['index','store','delete','show']]);
 
-    Route::get('/user', function () {
+        Route::post('/logout', AuthController::class.'@logout');
+        Route::post('/translate', TranslateController::class.'@translateMessage');
+        Route::apiResources(['contact-us' => ContactUsController::class],['only' => ['index','store','delete','show']]);
+        Route::apiResources(['chats' => ChatController::class]);
+        Route::post('contacts',UserController::class.'@contacts');
 
-        return 'hello';
-    });
+            Route::get('/user', function () {
+
+                return 'hello';
+            });
 
 });
