@@ -19,7 +19,7 @@ class ChatController extends Controller
         ->orWhere('user2',auth()->user()->id)
         ->with('user1')
         ->with('user2')
-        ->get()->toArray();
+        ->orderBy('updated_at', 'ASC')->get()->toArray();
 
         $user_chats = array_map(function($chat){
             return [
@@ -27,6 +27,7 @@ class ChatController extends Controller
                 'firebase_chat_id' => $chat['firebase_chat_id'],
                 'last_message_received' => $chat['last_message_received'],
                 'user2' => ($chat['user1']['id'] == auth()->user()->id) ? $chat['user2'] : $chat['user1'],
+                'updated_at' => $chat['updated_at'],
 
 
             ];

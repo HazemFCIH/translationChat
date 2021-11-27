@@ -20,5 +20,10 @@ class UserController extends Controller
         $user = User::where('mobile_number',$request->mobile_number)->first();
         return ($user) ? response()->json(['success'],200) :response()->json(['failed'],404);
     }
+    public function userProfile(Request $request){
+
+        return response()->json(['user' => auth()->user()],200);
+
+    }
 
 }

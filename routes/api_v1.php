@@ -23,10 +23,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::apiResources(['contact-us' => ContactUsController::class],['only' => ['index','store','delete','show']]);
         Route::apiResources(['chats' => ChatController::class]);
         Route::post('contacts',UserController::class.'@contacts');
-
-            Route::get('/user', function () {
-
-                return 'hello';
-            });
+            Route::get('/profile', UserController::class.'@userProfile');
 
 });
