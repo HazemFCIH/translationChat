@@ -19,9 +19,22 @@ class ChatController extends Controller
         ->orWhere('user2',auth()->user()->id)
         ->with('user1')
         ->with('user2')
-        ->get();
+        ->get()->toArray();
 
-        return response()->json(['chats'=>$chats],200);
+        $user_chats = array_map(function($chat){
+            return [
+                'chat_id' => $chat['id'],
+                'firebase_chat_id' => $chat['firebase_chat_id'],
+                'last_message_received' => $chat['last_message_received'],
+                'user2' => ($chat['user1']['id'] == auth()->user()->id) ? $chat['user2'] : $chat['user1'],
+
+
+            ];
+        },$chats);
+
+
+
+        return response()->json(['chats'=>$user_chats],200);
     }
 
 
