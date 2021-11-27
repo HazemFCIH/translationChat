@@ -10,8 +10,7 @@ class UserController extends Controller
 {
     public function contacts(Request $request)
     {
-
-        $contacts = User::whereIn('mobile_number',)->get();
+        $contacts = User::whereIn('mobile_number',$request->mobile_numbers)->get();
         return response()->json(['contacts' => $contacts],200);
     }
     public function checkUser(Request $request)
