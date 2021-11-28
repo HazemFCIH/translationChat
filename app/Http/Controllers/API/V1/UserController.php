@@ -27,5 +27,10 @@ class UserController extends Controller
         return response()->json(['user' => auth()->user()],200);
 
     }
+    public function allUser(Request $request){
+
+        return response()->json(['users' => User::all()],200);
+
+    }
 
 }

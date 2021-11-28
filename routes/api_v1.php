@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', AuthController::class.'@register');
 Route::post('/check_mobile', UserController::class.'@checkUser');
 Route::post('/login', AuthController::class.'@login');
+Route::get('/all-users', UserController::class.'@allUser');
 Route::middleware(['auth:sanctum'])->group(function () {
 
         Route::post('/logout', AuthController::class.'@logout');
