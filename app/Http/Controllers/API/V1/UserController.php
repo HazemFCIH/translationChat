@@ -11,6 +11,8 @@ class UserController extends Controller
     public function contacts(Request $request)
     {
         $mobileNumbers = trim($request->mobile_numbers, '[]');
+        $mobileNumbers = str_replace('+','',$mobileNumbers);
+        $mobileNumbers = str_replace(' ', '', $mobileNumbers);
         $mobileNumbers = explode(',',$mobileNumbers);
         $contacts = User::whereIn('mobile_number',$mobileNumbers)->get();
         return response()->json(['contacts' => $contacts],200);

@@ -19,7 +19,7 @@ class ChatController extends Controller
         ->orWhere('user2',auth()->user()->id)
         ->with('user1')
         ->with('user2')
-        ->orderBy('updated_at', 'ASC')->get()->toArray();
+        ->orderBy('updated_at', 'DESC')->get()->toArray();
 
         $user_chats = array_map(function($chat){
             return [
