@@ -18,9 +18,9 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:250',
-            'email' => 'required|email|unique:users,email|max:250',
-            'mobile_number' => 'required|string|unique:users,mobile_number|max:50',
+            'name' => 'required|max:250',
+            'email' => 'required|unique:users,email|max:250',
+            'mobile_number' => 'required|unique:users,mobile_number|max:50',
         ];
     }
     public function failedValidation(Validator $validator)
