@@ -24,7 +24,7 @@ class StoreFavoritePerson extends FormRequest
     public function rules()
     {
         return [
-            'favorite_person_id' => 'required'
+            'favorite_person_id' => 'required|exists:users,id'
         ];
     }
 }
