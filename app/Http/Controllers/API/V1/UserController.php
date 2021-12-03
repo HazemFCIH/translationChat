@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\API\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateUserProfileRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -30,6 +32,30 @@ class UserController extends Controller
     public function allUser(Request $request){
 
         return response()->json(['users' => User::all()],200);
+
+    }
+    public function updateProfile(UpdateUserProfileRequest $request){
+
+        if(!$request->hasFile('image_path')) {
+            return response()->json(['upload_file_not_found'], 400);
+        }
+        $file = $request->file('image_path');
+        $path = $file->store('public/profile_images');
+        $url = Storage::url($path);
+        $user = User::find(auth()->user()->id);
+        if(isset($user->image_path)){
+        Storage::delete($user->image_path);
+
+        }
+        $user->image_path = $path;
+        $user->image_url = asset($url);
+        $user->save();
+        return $user->only(['id','name','email','image_url','updated_at']);
+
+
+
+
+
 
     }
 

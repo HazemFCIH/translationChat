@@ -19,6 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('mobile_number')->unique();
             $table->string('image_path')->nullable();
+            $table->string('image_url')->nullable();
             $table->boolean('is_banned')->default(false);
             $table->boolean('is_active')->default(false);
             $table->timestamp('email_verified_at')->nullable();
