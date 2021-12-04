@@ -22,7 +22,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/logout', AuthController::class.'@logout');
         Route::post('/translate', TranslateController::class.'@translateMessage');
         Route::apiResources(['contact-us' => ContactUsController::class],['only' => ['index','store','destroy','show']]);
-        Route::apiResources(['favorites' => FavoritController::class],['only' => ['index','store','destroy']]);
+        Route::apiResources(['favorites' => FavoritController::class],['only' => ['index','store']]);
+        Route::post('delete-favorite',FavoritController::class.'@destroy');
         Route::apiResources(['chats' => ChatController::class]);
         Route::post('contacts',UserController::class.'@contacts');
         Route::get('/profile', UserController::class.'@userProfile');

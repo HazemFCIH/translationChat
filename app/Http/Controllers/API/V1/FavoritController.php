@@ -45,8 +45,12 @@ class FavoritController extends Controller
      * @param  \App\Models\Favorit  $favorit
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Favorit $favorite)
+    public function destroy(Request $request)
     {
+        $request->validate([
+            'favorite_id' => 'required'
+        ]);
+        $favorite = Favorit::find($request->favorite_id);
         $favorite->delete();
         return response()->json(['deleted'],200);
     }
