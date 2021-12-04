@@ -30,7 +30,7 @@ class ChatController extends Controller
                 'firebase_chat_id' => $chat['firebase_chat_id'],
                 'last_message_received' => $chat['last_message_received'],
                 'user2' => ($chat['user1']['id'] == auth()->user()->id) ? $chat['user2'] : $chat['user1'],
-                'favorite' => ($favorite_id) ? $favorite_id->id : null,
+                'favorite_id' => ($favorite_id) ? $favorite_id->id : null,
                 'updated_at' => $chat['updated_at'],
 
 
