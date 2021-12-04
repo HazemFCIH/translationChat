@@ -38,7 +38,7 @@ class ContactUsController extends Controller
     public function store(ContactUsRequest $request)
     {
         $contactUs = ContactUs::create([
-            'user_id' => $request->user_id,
+            'user_id' => auth()->user()->id,
             'name' => $request->name,
             'email' => $request->email,
             'message' => $request->message,

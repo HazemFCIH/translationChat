@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreChatRequest;
 use App\Models\Chat;
+use App\Models\Favorit;
 use Illuminate\Http\Request;
 
 class ChatController extends Controller
@@ -22,11 +23,14 @@ class ChatController extends Controller
         ->orderBy('updated_at', 'DESC')->get()->toArray();
 
         $user_chats = array_map(function($chat){
+
+           $favorite_id = Favorit::where('favorite_person_id',($chat['user1']['id'] == auth()->user()->id) ? $chat['user2'] : $chat['user1'])->where('user',auth()->user()->id)->first();
             return [
                 'chat_id' => $chat['id'],
                 'firebase_chat_id' => $chat['firebase_chat_id'],
                 'last_message_received' => $chat['last_message_received'],
                 'user2' => ($chat['user1']['id'] == auth()->user()->id) ? $chat['user2'] : $chat['user1'],
+                'favorite' => ($favorite_id) ? $favorite_id->id : null,
                 'updated_at' => $chat['updated_at'],
 
 

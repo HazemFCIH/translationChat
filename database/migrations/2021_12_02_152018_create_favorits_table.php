@@ -17,6 +17,7 @@ class CreateFavoritsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user');
             $table->unsignedBigInteger('favorite_person_id');
+            $table->string('firebase_chat_id');
             $table->foreign('user')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('favorite_person_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();

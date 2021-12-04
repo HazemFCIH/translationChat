@@ -26,7 +26,6 @@ class ContactUsRequest extends FormRequest
     {
         return [
             'name' => 'required|max:250|string',
-            'user_id' => 'required|exists:users,id',
             'email' => 'required|max:250|email|exists:users,email',
             'message' => 'required|max:5000|string',
         ];

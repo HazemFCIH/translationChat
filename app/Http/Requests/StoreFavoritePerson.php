@@ -24,7 +24,8 @@ class StoreFavoritePerson extends FormRequest
     public function rules()
     {
         return [
-            'favorite_person_id' => 'required|exists:users,id'
+            'favorite_person_id' => 'required|exists:users,id',
+            'firebase_chat_id' => 'required',
         ];
     }
 }

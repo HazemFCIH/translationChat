@@ -17,10 +17,7 @@ class FavoritController extends Controller
      */
     public function index()
     {
-        $favorites = Favorit::where('user',auth()->user()->id)->with('favorite')->get(['id','favorite_person_id']);
-
-
-
+        $favorites = Favorit::where('user',auth()->user()->id)->with('favorite')->get(['id','favorite_person_id','firebase_chat_id']);
         return response(['favorites'=>$favorites],200);
     }
 
@@ -35,6 +32,7 @@ class FavoritController extends Controller
         $favorite = Favorit::create([
             'user' => auth()->user()->id,
             'favorite_person_id' => $request->favorite_person_id,
+            'firebase_chat_id' => $request->firebase_chat_id,
         ]);
 
         return response()->json(['favorite'=> $favorite],201);
