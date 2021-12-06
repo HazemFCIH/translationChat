@@ -13,6 +13,8 @@ class UserController extends Controller
     public function contacts(Request $request)
     {
         $mobileNumbers = trim($request->mobile_numbers, '[]');
+        $mobileNumbers = str_replace('+2','',$mobileNumbers);
+        $mobileNumbers = str_replace('+966','',$mobileNumbers);
         $mobileNumbers = str_replace('+','',$mobileNumbers);
         $mobileNumbers = str_replace(' ', '', $mobileNumbers);
         $mobileNumbers = explode(',',$mobileNumbers);
