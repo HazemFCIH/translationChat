@@ -25,7 +25,7 @@ class StoreFavoritePerson extends FormRequest
     {
         return [
             'favorite_person_id' => 'required|exists:users,id',
-            'firebase_chat_id' => 'required',
+            'firebase_chat_id' => 'required|unique:favorits,firebase_chat_id',
         ];
     }
 }
