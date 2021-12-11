@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreChatRequest;
+use App\Http\Requests\UpdateLastMessageRequest;
 use App\Models\Chat;
 use App\Models\Favorit;
 use Illuminate\Http\Request;
@@ -84,6 +85,12 @@ class ChatController extends Controller
     {
         $chat->update(['last_message_received'=>$request->last_message_received]);
 
+        return response()->json(['chat'=> $chat],200);
+    }
+    public function updateLastMessage(UpdateLastMessageRequest $request){
+
+        $chat = Chat::where('firebase_chat_id',$request->firebase_chat_id)->first();
+        $chat->update(['last_message_received'=>$request->last_message_received]);
         return response()->json(['chat'=> $chat],200);
     }
 

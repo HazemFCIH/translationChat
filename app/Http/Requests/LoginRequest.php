@@ -26,8 +26,8 @@ class LoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'sometimes|required|email|max:240',
-            'mobile_number' => 'required|max:50',
+            'email' => 'sometimes|required|exists:users,email|email|max:240',
+            'mobile_number' => 'required|exists:users,mobile_number|max:50',
         ];
     }
     public function failedValidation(Validator $validator)
