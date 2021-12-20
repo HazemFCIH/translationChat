@@ -21,6 +21,30 @@ class UserController extends Controller
         $contacts = User::whereIn('mobile_number',$mobileNumbers)->get();
         return response()->json(['contacts' => $contacts],200);
     }
+
+    public function actives(Request $request)
+    {
+        $mobileNumbers = trim($request->mobile_numbers, '[]');
+        $mobileNumbers = str_replace('+2','',$mobileNumbers);
+        $mobileNumbers = str_replace('+966','',$mobileNumbers);
+        $mobileNumbers = str_replace('+','',$mobileNumbers);
+        $mobileNumbers = str_replace(' ', '', $mobileNumbers);
+        $mobileNumbers = explode(',',$mobileNumbers);
+        $actives = User::whereIn('mobile_number',$mobileNumbers)->where('is_active',true)->get();
+        return response()->json(['actives' => $actives],200);
+    }
+    public function online(Request $request){
+        $user = auth()->user();
+        $user->is_active = true;
+        $user->save();
+        return response()->json(['user'=>$user],200);
+    }
+    public function offline(Request $request){
+        $user = auth()->user();
+        $user->is_active = false;
+        $user->save();
+        return response()->json(['user'=>$user],200);
+    }
     public function checkUser(Request $request)
     {
         $user = User::where('mobile_number',$request->mobile_number)->first();

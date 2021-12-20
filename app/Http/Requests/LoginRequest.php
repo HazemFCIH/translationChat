@@ -28,6 +28,7 @@ class LoginRequest extends FormRequest
         return [
             'email' => 'sometimes|required|exists:users,email|email|max:240',
             'mobile_number' => 'required|exists:users,mobile_number|max:50',
+            'fcm_token' => 'required|string',
         ];
     }
     public function failedValidation(Validator $validator)

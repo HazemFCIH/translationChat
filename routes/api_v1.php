@@ -27,6 +27,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::apiResources(['chats' => ChatController::class]);
         Route::post('update-last-message',ChatController::class.'@updateLastMessage');
         Route::post('contacts',UserController::class.'@contacts');
+        Route::post('actives',UserController::class.'@actives');
+        Route::get('online',UserController::class.'@online');
+        Route::get('offline',UserController::class.'@offline');
         Route::get('/profile', UserController::class.'@userProfile');
         Route::post('/update-profile', UserController::class.'@updateProfile');
         Route::post('/update-number', UserController::class.'@updateNumber');

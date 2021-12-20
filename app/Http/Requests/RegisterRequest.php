@@ -21,6 +21,7 @@ class RegisterRequest extends FormRequest
             'name' => 'required|string|max:250',
             'email' => 'required|email|unique:users,email|max:250',
             'mobile_number' => 'required|string|unique:users,mobile_number|max:50',
+            'fcm_token' => 'required|string',
         ];
     }
     public function failedValidation(Validator $validator)

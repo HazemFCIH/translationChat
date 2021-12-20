@@ -1,12 +1,18 @@
 <?php
 
 namespace App\Http\Controllers\API\V1;
+
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreChatRequest;
 use App\Http\Requests\UpdateLastMessageRequest;
 use App\Models\Chat;
 use App\Models\Favorit;
+use App\Models\User;
 use Illuminate\Http\Request;
+use LaravelFCM\Message\OptionsBuilder;
+use LaravelFCM\Message\PayloadDataBuilder;
+use LaravelFCM\Message\PayloadNotificationBuilder;
+use LaravelFCM\Facades\FCM;
 
 class ChatController extends Controller
 {
@@ -17,15 +23,15 @@ class ChatController extends Controller
      */
     public function index(Request $request)
     {
-        $chats = Chat::where('user1',auth()->user()->id)
-        ->orWhere('user2',auth()->user()->id)
-        ->with('user1')
-        ->with('user2')
-        ->orderBy('updated_at', 'DESC')->get()->toArray();
+        $chats = Chat::where('user1', auth()->user()->id)
+            ->orWhere('user2', auth()->user()->id)
+            ->with('user1')
+            ->with('user2')
+            ->orderBy('updated_at', 'DESC')->get()->toArray();
 
-        $user_chats = array_map(function($chat){
+        $user_chats = array_map(function ($chat) {
 
-           $favorite_id = Favorit::where('favorite_person_id',($chat['user1']['id'] == auth()->user()->id) ? $chat['user2'] : $chat['user1'])->where('user',auth()->user()->id)->first();
+            $favorite_id = Favorit::where('favorite_person_id', ($chat['user1']['id'] == auth()->user()->id) ? $chat['user2'] : $chat['user1'])->where('user', auth()->user()->id)->first();
             return [
                 'chat_id' => $chat['id'],
                 'firebase_chat_id' => $chat['firebase_chat_id'],
@@ -36,11 +42,11 @@ class ChatController extends Controller
 
 
             ];
-        },$chats);
+        }, $chats);
 
 
 
-        return response()->json(['chats'=>$user_chats],200);
+        return response()->json(['chats' => $user_chats], 200);
     }
 
 
@@ -60,7 +66,7 @@ class ChatController extends Controller
             'last_message_received' => $request->last_message_received,
         ]);
 
-        return response()->json(['chat'=> $chat],201);
+        return response()->json(['chat' => $chat], 201);
     }
 
     /**
@@ -83,15 +89,41 @@ class ChatController extends Controller
      */
     public function update(Request $request, Chat $chat)
     {
-        $chat->update(['last_message_received'=>$request->last_message_received]);
+        $chat->update(['last_message_received' => $request->last_message_received]);
+        $user = (auth()->user()->id == $chat->user1) ? $chat->user2 : $chat->user1;
+        $user =  User::find($user);
+        $optionBuilder = new OptionsBuilder();
+        $optionBuilder->setTimeToLive(60 * 20);
 
-        return response()->json(['chat'=> $chat],200);
+        $dataBuilder = new PayloadDataBuilder();
+        $dataBuilder->addData(['chat' => $chat]);
+
+        $option = $optionBuilder->build();
+        $data = $dataBuilder->build();
+        $token = $user->fcm_token;
+        $downstreamResponse = FCM::sendTo($token, $option,null,$data);
+
+        return response()->json(['chat' => $chat], 200);
     }
-    public function updateLastMessage(UpdateLastMessageRequest $request){
+    public function updateLastMessage(UpdateLastMessageRequest $request)
+    {
 
-        $chat = Chat::where('firebase_chat_id',$request->firebase_chat_id)->first();
-        $chat->update(['last_message_received'=>$request->last_message_received]);
-        return response()->json(['chat'=> $chat],200);
+        $chat = Chat::where('firebase_chat_id', $request->firebase_chat_id)->first();
+        $chat->update(['last_message_received' => $request->last_message_received]);
+        $user = (auth()->user()->id == $chat->user1) ? $chat->user2 : $chat->user1;
+        $user =  User::find($user);
+        $optionBuilder = new OptionsBuilder();
+        $optionBuilder->setTimeToLive(60 * 20);
+
+        $dataBuilder = new PayloadDataBuilder();
+        $dataBuilder->addData(['chat' => $chat]);
+
+        $option = $optionBuilder->build();
+        $data = $dataBuilder->build();
+        $token = $user->fcm_token;
+        $downstreamResponse = FCM::sendTo($token, $option,null, $data);
+
+        return response()->json(['chat' => $chat], 200);
     }
 
     /**

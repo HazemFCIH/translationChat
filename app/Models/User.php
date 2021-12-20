@@ -25,6 +25,7 @@ class User extends Authenticatable
         'password',
         'is_banned',
         'is_active',
+        'fcm_token',
     ];
 
     /**

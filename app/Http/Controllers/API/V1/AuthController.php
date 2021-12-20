@@ -19,6 +19,7 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'mobile_number' => $request->mobile_number,
+            'fcm_token' => $request->fcm_token,
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
@@ -39,7 +40,8 @@ class AuthController extends Controller
     public function login(LoginRequest $request){
         $user = User::where('email',$request->email)->orWhere('mobile_number',$request->mobile_number)->first();
         $token = $user->createToken('auth_token')->plainTextToken;
-
+        $user->fcm_token = $request->fcm_token;
+        $user->save();
         $response = [
             'user' => $user,
             'token' => $token,
