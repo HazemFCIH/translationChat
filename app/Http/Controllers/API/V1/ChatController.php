@@ -90,18 +90,24 @@ class ChatController extends Controller
     public function update(Request $request, Chat $chat)
     {
         $chat->update(['last_message_received' => $request->last_message_received]);
+
         $user = (auth()->user()->id == $chat->user1) ? $chat->user2 : $chat->user1;
         $user =  User::find($user);
+
         $optionBuilder = new OptionsBuilder();
         $optionBuilder->setTimeToLive(60 * 20);
+
+        $notificationBuilder = new PayloadNotificationBuilder($user->name);
+        $notificationBuilder->setBody($request->last_message_received)->setSound('default');
 
         $dataBuilder = new PayloadDataBuilder();
         $dataBuilder->addData(['chat' => $chat]);
 
         $option = $optionBuilder->build();
         $data = $dataBuilder->build();
+        $notification = $notificationBuilder->build();
         $token = $user->fcm_token;
-        $downstreamResponse = FCM::sendTo($token, $option,null,$data);
+        $downstreamResponse = FCM::sendTo($token, $option,$notification,$data);
 
         return response()->json(['chat' => $chat], 200);
     }
@@ -112,16 +118,21 @@ class ChatController extends Controller
         $chat->update(['last_message_received' => $request->last_message_received]);
         $user = (auth()->user()->id == $chat->user1) ? $chat->user2 : $chat->user1;
         $user =  User::find($user);
+
         $optionBuilder = new OptionsBuilder();
         $optionBuilder->setTimeToLive(60 * 20);
+
+        $notificationBuilder = new PayloadNotificationBuilder($user->name);
+        $notificationBuilder->setBody($request->last_message_received)->setSound('default');
 
         $dataBuilder = new PayloadDataBuilder();
         $dataBuilder->addData(['chat' => $chat]);
 
         $option = $optionBuilder->build();
+        $notification = $notificationBuilder->build();
         $data = $dataBuilder->build();
         $token = $user->fcm_token;
-        $downstreamResponse = FCM::sendTo($token, $option,null, $data);
+        $downstreamResponse = FCM::sendTo($token, $option,$notification, $data);
 
         return response()->json(['chat' => $chat], 200);
     }

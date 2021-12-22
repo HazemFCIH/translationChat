@@ -34,8 +34,9 @@ class FavoritController extends Controller
             'favorite_person_id' => $request->favorite_person_id,
             'firebase_chat_id' => $request->firebase_chat_id,
         ]);
+        $favorites = Favorit::where('user',auth()->user()->id)->with('favorite')->get(['id','favorite_person_id','firebase_chat_id']);
 
-        return response()->json(['favorite'=> $favorite],201);
+        return response()->json(['favorites'=> $favorites],201);
     }
 
 

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\API\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateUserProfileRequest;
+use App\Models\Chat;
+use App\Models\Favorit;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -24,14 +26,34 @@ class UserController extends Controller
 
     public function actives(Request $request)
     {
-        $mobileNumbers = trim($request->mobile_numbers, '[]');
-        $mobileNumbers = str_replace('+2','',$mobileNumbers);
-        $mobileNumbers = str_replace('+966','',$mobileNumbers);
-        $mobileNumbers = str_replace('+','',$mobileNumbers);
-        $mobileNumbers = str_replace(' ', '', $mobileNumbers);
-        $mobileNumbers = explode(',',$mobileNumbers);
-        $actives = User::whereIn('mobile_number',$mobileNumbers)->where('is_active',true)->get();
-        return response()->json(['actives' => $actives],200);
+
+        $chats = Chat::where('user1', auth()->user()->id)
+        ->orWhere('user2', auth()->user()->id)
+        ->with('user1')
+        ->with('user2')
+        ->orderBy('updated_at', 'DESC')->get()->toArray();
+
+    $user_chats = array_map(function ($chat) {
+
+        $favorite_id = Favorit::where('favorite_person_id', ($chat['user1']['id'] == auth()->user()->id) ? $chat['user2'] : $chat['user1'])->where('user', auth()->user()->id)->first();
+        $user = ($chat['user1']['id'] == auth()->user()->id) ? $chat['user2'] : $chat['user1'];
+        if($user['is_active'] == true){
+        return [
+            'chat_id' => $chat['id'],
+            'firebase_chat_id' => $chat['firebase_chat_id'],
+            'last_message_received' => $chat['last_message_received'],
+            'user2' =>$user,
+            'favorite_id' => ($favorite_id) ? $favorite_id->id : null,
+            'updated_at' => $chat['updated_at'],
+
+
+        ];
+    }
+    }, $chats);
+
+
+
+    return response()->json(['actives' => $user_chats], 200);
     }
     public function online(Request $request){
         $user = auth()->user();
