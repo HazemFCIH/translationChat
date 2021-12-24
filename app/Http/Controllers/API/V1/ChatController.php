@@ -97,7 +97,7 @@ class ChatController extends Controller
         $optionBuilder = new OptionsBuilder();
         $optionBuilder->setTimeToLive(60 * 20);
 
-        $notificationBuilder = new PayloadNotificationBuilder($user->name);
+        $notificationBuilder = new PayloadNotificationBuilder(auth()->user()->name);
         $notificationBuilder->setBody($request->last_message_received)->setSound('default');
 
         $dataBuilder = new PayloadDataBuilder();
@@ -122,7 +122,7 @@ class ChatController extends Controller
         $optionBuilder = new OptionsBuilder();
         $optionBuilder->setTimeToLive(60 * 20);
 
-        $notificationBuilder = new PayloadNotificationBuilder($user->name);
+        $notificationBuilder = new PayloadNotificationBuilder(auth()->user()->name);
         $notificationBuilder->setBody($request->last_message_received)->setSound('default');
 
         $dataBuilder = new PayloadDataBuilder();
