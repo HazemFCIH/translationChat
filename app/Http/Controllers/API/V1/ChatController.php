@@ -101,13 +101,18 @@ class ChatController extends Controller
         $notificationBuilder->setBody($request->last_message_received)->setSound('default');
 
         $dataBuilder = new PayloadDataBuilder();
-        $dataBuilder->addData(['chat' => $chat]);
+        $dataBuilder->addData([
+            'firebase_chat_id' => $chat->firebase_chat_id,
+            'user2_name' => $user->name,
+            'user2_id' => $user->id,
+            'user2_Image' => $user->image_url
+        ]);
 
         $option = $optionBuilder->build();
         $data = $dataBuilder->build();
         $notification = $notificationBuilder->build();
         $token = $user->fcm_token;
-        $downstreamResponse = FCM::sendTo($token, $option,$notification,$data);
+        $downstreamResponse = FCM::sendTo($token, $option, $notification, $data);
 
         return response()->json(['chat' => $chat], 200);
     }
@@ -126,13 +131,17 @@ class ChatController extends Controller
         $notificationBuilder->setBody($request->last_message_received)->setSound('default');
 
         $dataBuilder = new PayloadDataBuilder();
-        $dataBuilder->addData(['chat' => $chat]);
-
+        $dataBuilder->addData([
+            'firebase_chat_id' => $chat->firebase_chat_id,
+            'user2_name' => $user->name,
+            'user2_id' => $user->id,
+            'user2_Image' => $user->image_url
+        ]);
         $option = $optionBuilder->build();
         $notification = $notificationBuilder->build();
         $data = $dataBuilder->build();
         $token = $user->fcm_token;
-        $downstreamResponse = FCM::sendTo($token, $option,$notification, $data);
+        $downstreamResponse = FCM::sendTo($token, $option, $notification, $data);
 
         return response()->json(['chat' => $chat], 200);
     }

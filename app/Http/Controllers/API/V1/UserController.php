@@ -51,6 +51,8 @@ class UserController extends Controller
     }
     }, $chats);
 
+    $user_chats = array_filter($user_chats);
+
 
 
     return response()->json(['actives' => $user_chats], 200);

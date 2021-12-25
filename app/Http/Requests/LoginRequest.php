@@ -31,12 +31,5 @@ class LoginRequest extends FormRequest
             'fcm_token' => 'required|string',
         ];
     }
-    public function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(response()->json([
-            'success'   => false,
-            'message'   => 'Validation errors',
-            'data'      => $validator->errors()
-        ]));
-    }
+
 }
